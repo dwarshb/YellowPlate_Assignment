@@ -2,7 +2,6 @@ package com.bhadra.dwarsh.yellowplateassignment;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -11,7 +10,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class SplashActivity extends Activity {
     private FirebaseUser user;
-    int splashtime = 3000;
+    int splashtime = 3000; // 3000 miliseconds = 3 seconds
     boolean active = true;
 
     @Override
@@ -19,6 +18,7 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         user = FirebaseAuth.getInstance().getCurrentUser();
+        //Thread to delay this activity for 3 sec
         Thread splashThread = new Thread() {
             @Override
             public void run() {
@@ -32,8 +32,11 @@ public class SplashActivity extends Activity {
                     Log.e("Splash",e.getMessage());
                 } finally {
                     if (user != null) {
+                        //User already Login goto MainActivity
+                        finish();
                         startActivity(new Intent(SplashActivity.this,MainActivity.class));
                     } else {
+                        //New User goto to LoginPage
                         finish();
                         startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                     }

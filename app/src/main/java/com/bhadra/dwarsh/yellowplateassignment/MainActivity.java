@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.UserA
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         userrecyclerview = (RecyclerView)findViewById(R.id.userslist);
+
+        //RetroFit Initialize
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(API.url)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.UserA
         calluser.enqueue(new Callback<List<GitUsers>>() {
             @Override
             public void onResponse(Call<List<GitUsers>> call, Response<List<GitUsers>> response) {
+                //Add Response of API in List
                 List<GitUsers> userlist = response.body();
                 adapter = new UserAdapter(MainActivity.this,userlist,MainActivity.this);
                 userrecyclerview.setAdapter(adapter);
@@ -53,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.UserA
 
             @Override
             public void onFailure(Call<List<GitUsers>> call, Throwable t) {
+                //Display Dialog to show error of API
                 AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
                 dialog.setTitle("Cannot Load Data from API");
                 dialog.setMessage(t.getMessage());
@@ -125,17 +129,20 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.UserA
 
     @Override
     public void onUserSelected(final GitUsers gitUsers) {
+        //Display Dialog on Item selected by user from RecyclerView
         AlertDialog.Builder alertdialog = new AlertDialog.Builder(MainActivity.this);
         alertdialog.setTitle("Profile: "+gitUsers.getLogin());
         alertdialog.setMessage("Do you like to view repository of this user.?");
         alertdialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                //Go to Github profile
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(gitUsers.getHtml_url())));
             }
         }).setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                //Disapper DialogBox
                 dialogInterface.dismiss();
             }
         });

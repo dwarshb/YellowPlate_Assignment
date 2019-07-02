@@ -8,35 +8,24 @@ import android.os.Bundle;
 import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
 import com.alorma.github.sdk.bean.dto.response.Token;
 import com.alorma.github.sdk.bean.dto.response.User;
 import com.alorma.github.sdk.services.login.RequestTokenClient;
 import com.alorma.github.sdk.services.user.GetAuthUserClient;
-import com.bhadra.dwarsh.yellowplateassignment.Interface.API;
-import com.bhadra.dwarsh.yellowplateassignment.Interface.GithubClient;
-import com.bhadra.dwarsh.yellowplateassignment.Pojo.AccessToken;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GithubAuthProvider;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observer;
-
 public class LoginActivity extends AppCompatActivity {
     WebView webView;
     private FirebaseAuth mAuth;
-    private final String clientId = "10b692ae7abd556868b3";
-    private final String clientSecret = "2be8c15c97fe711233d7ad247471bdd248cf50cd";
+    private final String clientId = "10b692ae7abd556868b3"; //Use your client_id
+    private final String clientSecret = "2be8c15c97fe711233d7ad247471bdd248cf50cd"; //Use your client secret
     private final String redirectUri = "https://yellowplate-bbd4f.firebaseapp.com/__/auth/handler";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         webView.loadUrl( uri.toString() );
         webView.clearCache(true);
         webView.clearHistory();
-        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setJavaScriptEnabled(true); // to perform authorize functions
         webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         webView.setWebViewClient(new WebViewClient(){
             @Override
@@ -72,7 +61,6 @@ public class LoginActivity extends AppCompatActivity {
                 return super.shouldOverrideUrlLoading(view, url);
             }
         });
-        //AuthCredential credential = GithubAuthProvider.getCredential(token);
 
     }
     private void requestGitHubUserAccessToken( String code ){
@@ -115,8 +103,6 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void onNext(com.alorma.github.sdk.bean.dto.response.User user) {
-                        // LoginActivity.this.user.setName( user.name );
-                        // LoginActivity.this.user.setEmail( user.email );
                         accessGithubLoginData( accessToken );
                     }
                 });
@@ -131,8 +117,8 @@ public class LoginActivity extends AppCompatActivity {
         if( tokens != null
                 && tokens.length > 0
                 && tokens[0] != null ){
-
             AuthCredential credential = GithubAuthProvider.getCredential( tokens[0]);
+            //Check whether credentials provider is github / GitHub
             credential = provider.equalsIgnoreCase("github") ? GithubAuthProvider.getCredential( tokens[0] ) : credential;
 
             mAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -140,14 +126,12 @@ public class LoginActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
 
                     if( !task.isSuccessful() ){
+                        //Login with Github Credentials Successfully stored in Firebase Authentication
                         startActivity(new Intent(LoginActivity.this,MainActivity.class));
-                        Log.e("ERROR","SUCCESS");
+                        Log.e("TAG","SUCCESS");
                     }
                 }
             });
-        }
-        else{
-            mAuth.signOut();
         }
     }
 
