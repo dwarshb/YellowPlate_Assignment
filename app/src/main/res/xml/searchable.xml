@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<searchable xmlns:android="http://schemas.android.com/apk/res/android"
+    android:hint="@string/search_hint"
+    android:label="@string/app_name" />
+<!--Github Token 72d967963affb83decd496c0221ffd33da70582c
+                 2be8c15c97fe711233d7ad247471bdd248cf50cd
+-->
