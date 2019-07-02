@@ -14,3 +14,5 @@ RetroFit is Used to fetch json data from API.:
 
 Github Library to request Token from github	
 'com.github.alorma:github-sdk:3.2.5'
+
+Firebase is used to authenticate github_user and store them.
